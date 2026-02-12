@@ -1,0 +1,73 @@
+%==== 文档类 ====================================================================
+\documentclass[../../main.tex]{subfiles}
+
+\begin{document}
+\setlist[enumerate]{label=\arabic*),topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\setlist[itemize]{topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\arraycolsep=1.4pt
+
+
+
+
+
+
+
+
+\section{Data Type}
+\subsection{Object}
+\qquad Python is an {\bf object-oriented} programing language. Everything is an {\bf object} in Python:
+\[\text{object}=\left\{\begin{array}{l}
+\text{identity},\\
+\text{type / class},\\
+\text{value / state},\\
+\text{methods / behaviors / operations}.\\
+\end{array}\right.\]
+\begin{lstlisting}[language=Python]
+# print the identity, type, and the value for 4
+print(id(4),type(4),4)
+# type of any type is a type, the type itself is a type
+print(type(type(4)))
+print(type(type(type(4))))
+\end{lstlisting}
+\begin{pyout}
+140711773227544 <class 'int'> 4
+<class 'type'>
+<class 'type'>
+\end{pyout}
+\begin{itemize}
+\item {\bf Identity}: it guarantees that {different objects} have {distinct identities} at {any given time}. 
+\item {\bf Type}: objects of the same type support the same {operations}, and share the same {properties}.
+\end{itemize}
+
+
+\subsection{String}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Numeric}
+\qquad The following are numeric types:
+\[\text{bool}\subset\text{int}\subset\text{float}\subset\text{complex}\]
+\begin{lstlisting}[language=Python]
+# an example for the above data types
+print(True,1,1.0,1+0j)
+\end{lstlisting}
+\begin{pyout}
+True 1 1.0 (1+0j)
+\end{pyout}
+\begin{lem}
+If $f\in\s{\text{bool},\text{int},\text{float}}$
+\end{lem}
+
+
+
+
+
+\end{document}

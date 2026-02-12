@@ -94,6 +94,25 @@
   breakatwhitespace=true,
   tabsize=3
 }
+\lstdefinestyle{output}{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{black!20},
+  backgroundcolor=\color{black!3},
+  frameround=tttt,
+  xleftmargin=0.6em,
+  xrightmargin=0.6em,
+  aboveskip=0.8em,
+  belowskip=0.8em,
+  lineskip=0.1em,
+}
+\lstnewenvironment{pyout}
+  {\lstset{style=output}}
+  {}
 
 %==== 按章节拆分文件：subfiles ================================================
 \usepackage{subfiles}
@@ -469,7 +488,7 @@ But in the variation of the action:
 
 
 \chapter{Introduction to Statistics}
-\subfile{Computer/cs_python.tex}
+\subfile{CS/CS_python/cs_python.tex}
 
 
 
