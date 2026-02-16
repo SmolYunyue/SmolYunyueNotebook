@@ -40,15 +40,29 @@ print(type(type(type(4))))
 \end{itemize}
 
 
-\subsection{String}
-
-
-
-
-
-
-
-
+\subsection{Binding and Input}
+\qquad In Python, the {\bf assignment} of $a=b$ is like making the name {\itshape a} pointing to the object {\itshape b}.
+\begin{lstlisting}[language=Python]
+# an example for binding
+a,b=4,print
+print(type(a),a,type(b),b)
+b(a+5,"hello")
+\end{lstlisting}
+\begin{pyout}
+<class 'int'> 4 <class 'builtin_function_or_method'> <built-in function print>
+9 hello
+\end{pyout}
+\qquad The basic input in Python is through the function input( ). The input takes ONE string as prompt, and it reads input as a string.
+\begin{lstlisting}[language=Python]
+# an example for input function
+n=input(f"{a} and hello\n")
+print(type(n),n)
+\end{lstlisting}
+\begin{pyout}
+4 and hello
+5
+<class 'str'> 5
+\end{pyout}
 
 
 
@@ -57,14 +71,79 @@ print(type(type(type(4))))
 \[\text{bool}\subset\text{int}\subset\text{float}\subset\text{complex}\]
 \begin{lstlisting}[language=Python]
 # an example for the above data types
-print(True,1,1.0,1+0j)
+print(type(True),True,type(1),1,
+      type(1.0),1.0,type(1+0j),1+0j)
 \end{lstlisting}
 \begin{pyout}
-True 1 1.0 (1+0j)
+<class 'bool'> True <class 'int'> 1 <class 'float'> 1.0 <class 'complex'> (1+0j)
 \end{pyout}
-\begin{lem}
-If $f\in\s{\text{bool},\text{int},\text{float}}$
-\end{lem}
+\begin{lstlisting}[language=Python]
+# subset example
+if True==1 and 1==1.0 and 1.0==1+0j:
+    print("Yes")
+else:
+    print("No")
+\end{lstlisting}
+\begin{pyout}
+Yes
+\end{pyout}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

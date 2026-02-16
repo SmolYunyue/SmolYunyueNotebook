@@ -4,7 +4,22 @@ print(id(4),type(4),4)
 print(type(type(4)))
 print(type(type(type(4))))
 
-# an example for the above data types
-print(True,1,1.0,1+0j)
+# an example for binding
+a,b=4,print
+print(type(a),a,type(b),b)
+b(a+5,"hello")
 
-print(complex(1.0))
+# an example for input function
+n=input(f"{a} and hello\n")
+print(type(n),n)
+
+# an example for the above data types
+print(type(True),True,type(1),1,
+      type(1.0),1.0,type(1+0j),1+0j)
+
+# subset example
+if True==1 and 1==1.0 and 1.0==1+0j:
+    print("Yes")
+else:
+    print("No")
+
