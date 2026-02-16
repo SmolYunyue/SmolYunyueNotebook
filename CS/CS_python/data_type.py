@@ -23,3 +23,6 @@ if True==1 and 1==1.0 and 1.0==1+0j:
 else:
     print("No")
 
+# input to number
+n=input("type in an integer\n")
+print(type(n),n,type(int(n)),int(n))

@@ -87,8 +87,35 @@ else:
 \begin{pyout}
 Yes
 \end{pyout}
-
-
+\qquad We can use bool( ), int( ), float( ), and complex( ) to convert a string to the corresponding data type from input( ); 
+\begin{lstlisting}[language=Python]
+# input to number
+n=input("type in an integer\n")
+print(type(n),n,type(int(n)),int(n))
+\end{lstlisting}
+\begin{pyout}
+type in an integer
+17
+<class 'str'> 17 <class 'int'> 17
+\end{pyout}
+identically map from a subset to a larger set, or canonically map from the supset to the restricted set:
+\begin{lstlisting}[language=Python]
+# input to number
+n=input("type in an integer\n")
+print(type(n),n,type(int(n)),int(n))
+\end{lstlisting}
+\begin{pyout}
+type in an integer
+17
+<class 'str'> 17 <class 'int'> 17
+\end{pyout}
+\qquad There are some operations:
+\begin{itemize}
+\item float:
+\begin{enumerate}
+\item is\_integer()
+\end{enumerate}
+\end{itemize}
 
 
 
