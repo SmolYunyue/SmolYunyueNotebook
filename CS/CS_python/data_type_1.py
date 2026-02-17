@@ -6,7 +6,8 @@ print(type(type(type(4))))
 
 # an example for binding
 a,b=4,print
-print(type(a),a,type(b),b)
+print(type(a),a,type(b),b,
+      id(a),id(4),id(b),id(print))
 b(a+5,"hello")
 
 # an example for input function
@@ -18,11 +19,20 @@ print(type(True),True,type(1),1,
       type(1.0),1.0,type(1+0j),1+0j)
 
 # subset example
-if True==1 and 1==1.0 and 1.0==1+0j:
+if True==1==1.0==1+0j:
     print("Yes")
 else:
     print("No")
 
-# input to number
+# input string to number
 n=input("type in an integer\n")
 print(type(n),n,type(int(n)),int(n))
+
+# identical map and canonical map
+print(int(False),float(5),int(3.7))
+
+# logic and bool
+print(type(1==0))
+print(type(""),bool(""))
+if not "":
+    print("statement or bool value defined can be used in logic")
