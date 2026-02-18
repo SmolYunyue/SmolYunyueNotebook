@@ -14,4 +14,15 @@ print(type("abcd".__len__()),"abcd".__len__(),
 print(type((1.3).is_integer()),(1.3).is_integer())
 
 # regular method as_integer_ratio() for floats
-print(type((0.5).as_integer_ratio()),(0.5).as_integer_ratio())
+print(type((0.5).as_integer_ratio()),
+      (0.5).as_integer_ratio())
+
+# decimal in binary
+x=0.1
+print(x,f"{x:.17f}")
+
+# standard library decimal
+import decimal as dec
+print(type(dec.Decimal("0.1")),"\n",
+      f"{dec.Decimal("0.1"):.50f}\n",
+      f"{dec.Decimal(0.1):.50f}")

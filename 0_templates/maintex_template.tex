@@ -1,0 +1,489 @@
+%==== 文档类 ====================================================================
+\documentclass[openright,twocolumn]{book} % openright: 章从右页开始; twocolumn: 全文双栏
+
+%==== 数学 & 定理宏包 ==========================================================
+\usepackage{amsmath}    % 数学环境
+\usepackage{amssymb}    % 额外数学符号
+\usepackage{amsfonts}   % 额外数学字体
+\usepackage{amsbsy}     % 粗体数学符号
+\usepackage{amsthm}     % 基本定理环境
+\usepackage{thmtools}   % 高级定理样式
+\usepackage{mathrsfs}   % \mathscr 花体
+\usepackage{tensor}     % 张量上下标
+\usepackage{relsize}    % 相对字号（\mathsmaller 等）
+\usepackage{bm}
+
+%==== 字体 & 引擎选择 + 中文支持 ===============================================
+\usepackage{iftex}
+\ifTUTeX
+  %=== XeLaTeX / LuaLaTeX 一类编译：强烈推荐用于中英混排 ========================
+  \usepackage{unicode-math}
+  \usepackage{xeCJK}                       % 中文支持（自动处理 UTF-8 中文）
+  \setmainfont{TeX Gyre Termes}[Scale=1.0] % 英文字体
+  \setmathfont{TeX Gyre Termes Math}       % 数学字体
+  % 把下面的中文字体名改成你系统中存在的字体：
+  % Windows 常见: SimSun / SimHei / Microsoft YaHei
+  % macOS  常见: Songti SC / STSong / Heiti SC
+  \setCJKmainfont{SimSun}                  % 中文正文字体
+  \setCJKfamilyfont{hei}{SimHei}           % 中文黑体
+  \newcommand{\hei}{\CJKfamily{hei}}       % 切换到黑体：\hei 文字
+\else
+  %=== pdfLaTeX 编译：通过 CJK 宏包支持中文 =====================================
+  \usepackage{txfonts}                     % 老的 Times 字体（可按需删）
+  \usepackage{newtxtext,newtxmath}         % Times 风格英文字体 + 数学
+  \usepackage{CJKutf8}                     % 中文支持（需 UTF-8 源文件）
+
+  % 自动用 CJK 环境包住整篇文档，无需手动写 \begin{CJK}...\end{CJK}
+  \AtBeginDocument{\begin{CJK}{UTF8}{gbsn}}  % gbsn: 简体中文宋体编码
+  \AtEndDocument{\end{CJK}}
+\fi
+
+\usepackage{anyfontsize}        % 任意字号
+
+%==== 图形 & 绘图 ==============================================================
+\usepackage{graphicx}           % 插图
+\usepackage{tikz}               % 绘图
+\usepackage{pict2e}             % 改进 picture 环境（自定义大号运算符用到）
+
+%==== 颜色设置（宏包 + 自定义颜色）============================================
+\usepackage{color}              % 基本颜色支持
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{pk}{RGB}{242, 51, 175}
+\definecolor{or}{RGB}{140, 136, 28}
+\definecolor{mbg}{RGB}{222,237,250}
+\definecolor{gd}{RGB}{237,130,0}
+
+%==== 语言、编码、引号（中英混排友好）=========================================
+\usepackage[utf8]{inputenc}     % 源文件 UTF-8 编码（pdfLaTeX 需要；Xe/Lua 可忽略）
+\usepackage[english]{babel}     % 英文断词；中文由 xeCJK 或 CJK 处理
+\usepackage{csquotes}           % 引号/引用样式
+
+%==== 标题、目录、页眉脚、列表、表格等 =======================================
+\usepackage{titlesec}           % 标题格式
+\usepackage{titletoc}           % 目录格式
+\usepackage{fancyhdr}           % 页眉页脚（暂未使用，可按需启用）
+\usepackage{enumitem}           % 列表格式
+\usepackage{array}              % 表格列类型
+\usepackage{epigraph}
+\usepackage[UTF8]{ctex}
+\newcommand{\xingkai}{\CJKfamily{xingkai}}
+
+%==== 行距、脚注、文本辅助 =====================================================
+\usepackage{setspace}           % 行距
+\usepackage[perpage]{footmisc}  % 每页脚注重置计数
+\usepackage{lipsum}             % 虚拟文本测试排版
+
+%==== 代码高亮（listings）=====================================================
+\usepackage{listings}
+\lstset{
+  frame=tb,
+  language=Matlab,              % 默认语言（可在局部改）
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+%==== 按章节拆分文件：subfiles ================================================
+\usepackage{subfiles}
+% 主文件 main.tex 中示例：
+%   \chapter{Title}
+%   \subfile{chapters/ch1.tex}
+% 子文件 chapters/ch1.tex 中：
+%   \documentclass[../main.tex]{subfiles}
+%   \begin{document}
+%   ... 内容 ...
+%   \end{document}
+
+%==== 自定义大号运算符 + 公式左右对齐控制 ====================================
+\newif\ifnarrow
+\narrowfalse
+
+\makeatletter
+% 通用“放大运算符”构造
+\newcommand{\my@big}[1]{%
+  \mathop{\vphantom{\sum}\mathpalette\my@makebig{#1}}\slimits@%
+}
+\AtBeginDocument{%
+  \DeclareRobustCommand{\bigplus}{\narrowfalse\DOTSB\my@big\my@plus}%
+  \DeclareRobustCommand{\bigtimes}{\narrowtrue\DOTSB\my@big\my@times}%
+  \DeclareRobustCommand{\bigbox}{\narrowfalse\DOTSB\my@big\my@box}%
+}
+\newcommand{\my@makebig}[2]{%
+  \ifnarrow
+    \def\scalefactor{0.8}%
+  \else
+    \def\scalefactor{1}%
+  \fi%
+  \vcenter{%
+    \sbox\z@{$\m@th#1\sum$}%
+    \setlength{\unitlength}{0.9\dimexpr\ht\z@+\dp\z@}%
+    \hbox{\kern0.1\wd\z@\scalebox{\scalefactor}[1]{\my@draw{#1}{#2}}\kern0.1\wd\z@}%
+  }%
+}
+\newcommand{\my@draw}[2]{%
+  \begin{picture}(1,1)
+    \linethickness{%
+      \ifx#1\displaystyle 1.15\fontdimen8\textfont3\else
+      \ifx#1\textstyle 1.05\fontdimen8\textfont3\else
+      \ifx#1\scriptstyle1\fontdimen8\scriptfont3\else
+      1\fontdimen8\scriptscriptfont3\fi\fi\fi
+    }%
+    #2
+  \end{picture}%
+}
+\newcommand{\my@plus}{%
+  \roundcap
+  \Line(0.5,0)(0.5,1)
+  \Line(0,0.5)(1,0.5)
+}
+\newcommand{\my@times}{%
+  \roundcap
+  \Line(0,0)(1,1)
+  \Line(0,1)(1,0)
+}
+\newcommand{\my@box}{%
+  \roundcap
+  \Line(0,0)(1,0)
+  \Line(1,0)(1,1)
+  \Line(1,1)(0,1)
+  \Line(0,1)(0,0)
+}
+
+% 公式左对齐 / 居中切换
+\newcommand{\mathleft}{\@fleqntrue\@mathmargin0pt}
+\newcommand{\mathcenter}{\@fleqnfalse}
+\makeatother
+
+%==== 定理环境样式 ==============================================================
+
+% Theorem
+\declaretheoremstyle[
+ parent=section,
+ headfont=\bf\itshape\normalsize\color{blue},
+ headpunct={},
+ notefont=\bf\itshape\color{gd}, notebraces={}{} ,
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Theorem,
+ postheadspace=\newline,
+ headformat=\NUMBER~\NAME:\NOTE
+]{temp1}
+\declaretheorem[style=temp1]{theo}
+
+% Definition（与 theo 共用计数）
+\declaretheoremstyle[
+ sibling=theo,
+ headfont=\bf\itshape\normalsize\color{red},
+ headpunct={},
+ notefont=\bf\itshape\color{gd}, notebraces={}{} ,
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Definition,
+ postheadspace=\newline,
+ headformat=\NUMBER~\NAME:\NOTE
+]{temp2}
+\declaretheorem[style=temp2]{de}
+
+% Remark（无编号）
+\declaretheoremstyle[
+ numbered=no,
+ headformat=\NAME:\NOTE,
+ notefont=\bf\itshape\color{gd}, notebraces={(}{)} ,
+ headfont=\bf\itshape\normalsize\color{pk},
+ headpunct={},
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Remark,
+ postheadspace=\newline
+]{temp3}
+\declaretheorem[style=temp3]{re}
+
+% Proposition（与 theo 共用计数）
+\declaretheoremstyle[
+ sibling=theo,
+ headfont=\bf\itshape\normalsize\color{blue},
+ headpunct={},
+ notefont=\bf\itshape\color{gd}, notebraces={}{} ,
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Proposition,
+ postheadspace=\newline,
+ headformat=\NUMBER~\NAME:\NOTE
+]{temp4}
+\declaretheorem[style=temp4]{pro}
+
+% Corollary（以 theo 为 parent）
+\declaretheoremstyle[
+ parent=theo,
+ headfont=\bf\itshape\normalsize\color{mauve},
+ headpunct={},
+ notefont=\bf\itshape\color{gd}, notebraces={}{} ,
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Corollary,
+ postheadspace=\newline,
+ headformat=\NUMBER~\NAME:\NOTE
+]{temp5}
+\declaretheorem[style=temp5]{co}
+
+% Lemma（与 theo 共用计数）
+\declaretheoremstyle[
+ sibling=theo,
+ headfont=\bf\itshape\normalsize\color{mauve},
+ headpunct={},
+ notefont=\bf\itshape\color{gd}, notebraces={}{} ,
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Lemma,
+ postheadspace=\newline,
+ headformat=\NUMBER~\NAME:\NOTE
+]{temp6}
+\declaretheorem[style=temp6]{lem}
+
+% Proof（带彩色“Proof”和方块结尾）
+\declaretheoremstyle[
+ numbered=no,
+ headfont=\bf\itshape\color{dkgreen},
+ headpunct={},
+ bodyfont=\small\normalfont
+    \setlength{\abovedisplayskip}{3pt}
+    \setlength{\belowdisplayskip}{3pt}
+    \setlength{\abovedisplayshortskip}{3pt}
+    \setlength{\belowdisplayshortskip}{3pt},
+ name=Proof,
+ headformat=\NAME:\NOTE,
+ postheadspace=\newline,
+ qed=$\square$
+]{temp7}
+\declaretheorem[style=temp7]{p}
+
+%==== 版面尺寸 & 双栏间距 ======================================================
+\setlength{\columnsep}{10mm}  % 双栏间距
+
+\hoffset=-20.4mm
+\voffset=-25.4mm
+\footskip=1truecm
+\textwidth=204.4mm
+\textheight=24.5truecm
+\oddsidemargin=0mm
+\evensidemargin=0mm
+\marginparsep=0mm
+\marginparwidth=0mm
+\marginparpush=0mm
+
+\parindent=0pt              % 段首不缩进
+
+%==== 章节编号 & 目录样式 ======================================================
+\renewcommand\thesection{\S\arabic{section}}          % §1, §2, ...
+\renewcommand\thesubsection{\color{red}$\dagger$\alph{subsection}} % †a, †b, ...
+\renewcommand\thepart{}                             % part 不显示编号
+
+\titlecontents{part}[0em]{\bigskip\centering\bfseries}
+  {}{}{\hfill}
+
+\titlecontents{chapter}[1.05em]{\bigskip}%
+  {\contentslabel[\MakeUppercase{\romannumeral\thecontentslabel}]{2em}\enspace\textsc}%
+  {\hspace*{-1em}\textsc}%
+  {}%
+
+\titlecontents{section}[1.6em]{\smallskip}%
+  {\thecontentslabel.\enspace}
+  {}%
+  {}%
+
+%==== 常用数学命令 & 运算符 =====================================================
+\newcommand*{\defeq}{\stackrel{\mathsmaller{\mathsf{def}}}{{=}}}
+\newcommand*{\ideto}{\stackrel{\mathsmaller{\mathsf{ide}}}{{\to}}}
+\newcommand*{\cardeq}{\cong_{\mathsmaller{set.}}}
+\newcommand*{\topeq}{\cong_{\mathsmaller{top.}}}
+\newcommand*{\oo}{\text{\o}}
+
+% 函数限制/共限制
+\newcommand\restr[2]{{%
+  \left.\kern-\nulldelimiterspace
+  #1
+  \littletaller
+  \right|_{#2}
+}}
+\newcommand\pd[2]{{%
+  \frac{\partial #2}{\partial #1}
+}}
+\newcommand\cores[2]{{%
+  \left.\kern-\nulldelimiterspace
+  #1
+  \littletaller
+  \right|^{#2}
+}}
+\newcommand\tores[3]{{%
+  \left.\kern-\nulldelimiterspace
+  #1
+  \littletaller
+  \right|_{#2}^{#3}
+}}
+\newcommand{\littletaller}{\mathchoice{\vphantom{\big|}}{}{}{}}
+
+% 括号、花体、黑板体
+\newcommand\s[1]{\left\{#1\right\}}
+\newcommand\f[1]{\left(#1\right)}
+\newcommand\e[1]{\left[#1\right]}
+\newcommand\lo[1]{\mathscr{#1}}
+\newcommand\fu[1]{\mathcal{#1}}
+\newcommand\bb[1]{\mathbb{#1}}
+
+\newcommand\bs{_\blacksquare}
+
+\newcommand\tv{\lo{V}_\varphi}
+\newcommand\tvm{\lo{V}_\varphi^\fu{M}}
+
+% 常用算子
+\newcommand{\EE}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\DeclareMathOperator{\dom}{dom}
+
+% 绝对值、范数、内积
+\newcommand\abs[1]{\left|#1\right|}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+\newcommand\inp[1]{\left\langle#1\right\rangle}
+\newcommand\vct[1]{\mathbf{#1}}
+
+% 彩色交叉引用
+\newcommand\bpro[1]{{\small\color{blue}Pro.\ref{#1}}}
+\newcommand\btheo[1]{{\small\color{blue}Thm.\ref{#1}}}
+\newcommand\plem[1]{{\small\color{mauve}Lem.\ref{#1}}}
+\newcommand\gname[1]{{\small\color{gd}{#1}}}
+
+%==== 全局参数 ==================================================================
+\setcounter{tocdepth}{2}    % 目录显示到 section
+\tolerance=10000            % 断行容忍度
+
+
+
+\begin{document}
+
+
+\pagenumbering{roman}
+
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\setlist[enumerate]{label=\arabic*),topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\setlist[itemize]{topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\arraycolsep=1.4pt
+
+\pretocmd{\subsection}{%
+  \setlength{\abovedisplayskip}{3pt}%
+  \setlength{\belowdisplayskip}{3pt}%
+  \setlength{\abovedisplayshortskip}{3pt}%
+  \setlength{\belowdisplayshortskip}{3pt}%
+}{}{}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\small
+
+
+
+
+\section{Lagrangian Mechanics}
+\qquad Let us start from defining the {\bf action}:
+\[S\e{\bm{q}\f{t}}=\int_0^TL\f{\bm{q},\dot{\bm{q}},t}\,dt,\]
+the {\bf Eular-Lagrange equation} is derived from $\delta S=0$, with an additional restriction $\delta{\bm{q}\f{0}}=\delta{\bm{q}\f{T}}=0$:
+\[\begin{array}{rcl}
+\displaystyle\delta\int_0^TL\,dt&=&\displaystyle\int_0^T\f{\nabla_{\bm{q}}L\cdot\delta\bm{q}+\nabla_{\dot{\bm{q}}}L\cdot\delta\dot{\bm{q}}}\,dt\\
+&=&\displaystyle\int_0^T\f{\nabla_{\bm{q}}L-\frac{d}{dt}\nabla_{\dot{\bm{q}}}L}\cdot\delta\bm{q}\,dt=0.
+\end{array}\]
+Since the choice of $\delta\bm{q}$ is arbitrary, we obtain the Eular-Lagrange equation (we place the highest order derivative at the beginning): 
+\begin{equation}
+\frac{d}{dt}\bm{\nabla}_{\dot{\bm{q}}}L-\bm{\nabla}_{\bm{q}}L=\bm{0}.
+\end{equation}
+But what is the {\bf Lagrangian} function $L$?
+\subsection{Free Particle}
+\qquad First, there are some symmetry about the Lagrangian:
+\begin{enumerate}
+\item Space translation: $L\f{\bm{q},\dot{\bm{q}},t}=L\f{\dot{\bm{q}}}$.
+\item Rotation: $L\f{\dot{\bm{q}}}=L\f{\abs{\dot{\bm{q}}}^2}$.
+\end{enumerate}
+In this sense:
+\[2\frac{d}{dt}L'\f{\abs{\dot{\bm{q}}}^2}\dot{\bm{q}}.\]
+Compare to the Newtonian Mechanics:
+\[m\ddot{\bm{q}}=0,\]
+we make $L'\f{\abs{\dot{\bm{q}}}^2}$ as a constant $m/2$:
+\begin{equation}
+L_\text{free}=T=\frac{1}{2}m\abs{\dot{\bm{q}}}^2.
+\end{equation}
+\subsection{Conservative Force}
+\qquad In the case of conservative force:
+\[m\ddot{\bm{r}}=\bm{F}=-\bm{\nabla}V\f{\bm{q}}.\]
+Then we have
+\[\frac{d}{dt}\bm{\nabla}_{\dot{\bm{q}}}T-\bm{\nabla}_{\bm{q}}T+\bm{\nabla}V\f{\bm{q}}=\frac{d}{dt}\bm{\nabla}_{\dot{\bm{q}}}\f{T-V}-\bm{\nabla}_{\bm{q}}\f{T-V}=0.\]
+So we define
+\begin{equation}
+L_\text{conserve}=T-V=\frac{1}{2}m\abs{\dot{\bm{q}}}^2-V.
+\end{equation}
+\subsection{Constraint Force}
+\qquad Under the following conditions, we can use the {\bf generalized coordinate}:
+\begin{enumerate}
+\item There is some holonomic constraint $f\f{\bm{q},t}$.
+\item The constraint force satisfies $\bm{F}\cdot\delta\bm{q}=0$.
+\end{enumerate}
+In Newtonian Mechanics:
+\[m\ddot{\bm{q}}=\bm{F}_\text{conserve}+\bm{F}_\text{constraint}.\]
+But in the variation of the action:
+\[\begin{array}{rcl}
+\delta S&=&\displaystyle\int_0^T\f{m\ddot{\bm{q}}-\bm{F}_\text{conserve}-\bm{F}_\text{constraint}}\cdot\delta\bm{q}\,dt\\
+&=&\displaystyle\int_0^T\f{m\ddot{\bm{q}}-\bm{F}_\text{conserve}}\cdot\delta\bm{q}\,dt=0
+\end{array}\]
+
+
+
+
+
+
+%\chapter{Introduction to Statistics}
+%\subfile{../3_computer_science/python/python.tex}
+
+
+
+
+
+
+
+
+
+\onecolumn
+\begin{thebibliography}{999}
+
+\end{thebibliography}
+
+
+
+\end{document}
