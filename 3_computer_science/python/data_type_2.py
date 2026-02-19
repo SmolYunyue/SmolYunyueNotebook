@@ -22,7 +22,54 @@ x=0.1
 print(x,f"{x:.17f}")
 
 # standard library decimal
-import decimal as dec
-print(type(dec.Decimal("0.1")),"\n",
-      f"{dec.Decimal("0.1"):.50f}\n",
-      f"{dec.Decimal(0.1):.50f}")
+import decimal
+print(type(decimal.Decimal("0.1")),"\n",
+      f"{decimal.Decimal("0.1"):.50f}\n",
+      f"{decimal.Decimal(0.1):.50f}")
+
+# standard library fractions
+import fractions
+print(type(fractions.Fraction(1,10)),"\n",
+      fractions.Fraction(1,10),fractions.Fraction("0.1"),
+      fractions.Fraction(1,10)==decimal.Decimal("0.1"))
+
+# regular method strip() for string
+n="     abc  123     "
+print(n,"\n",n.strip())
+
+# regular method lower(), upper(), and casefold() for string
+n="AbCdEf"
+print(n.lower(),n.upper(),n.casefold())
+
+# regular method replace() for string
+n="banana"
+print(n.replace("a","A",2),n.replace("a","A"))
+
+# regular method split(), join() for string
+n="123.456.789"
+print(type(n.split(".")),n.split("."),
+      type(",".join(n.split("."))),",".join(n.split(".")))
+
+# string is immutable
+n="123"
+m=n.strip("3")
+print(n is m,n,m)
+
+# f-string examples
+x=3.14159265358
+print(f"Pi is approximately {x}\n",
+      f"Pi is approximately {x:.4f}")
+
+# precision
+x=3.14159265358
+print(f"{x:f}\n",
+      f"{x:10f}")
+
+# integer
+print(f"{int(x):5d}\n",
+      f"{int(x):<5d}\n",
+      f"{int(x):^5d}\n",
+      f"{int(x):>5d}\n",
+      f"{int(x):0<5d}\n",
+      f"{int(x):e^5d}\n",
+      f"{int(x):x>5d}")

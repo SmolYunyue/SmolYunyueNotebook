@@ -1,0 +1,464 @@
+%==== 文档类 ====================================================================
+\documentclass[../../100_note/main.tex]{subfiles}
+
+\begin{document}
+\setlist[enumerate]{label=\arabic*),topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\setlist[itemize]{topsep=0pt,parsep=0pt,wide=0pt,itemsep=0pt,partopsep=0pt}
+\arraycolsep=1.4pt
+
+
+
+
+
+
+
+
+\section{Data Type}
+\subsection{Object}
+\qquad Python is an {\bf object-oriented} programing language. Everything is an {\bf object} in Python:
+\[\text{object}=\left\{\begin{array}{l}
+\text{identity},\\
+\text{type / class},\\
+\text{value / state},\\
+\text{methods / behaviors / operations}.\\
+\end{array}\right.\]
+\begin{lstlisting}[language=Python]
+# print the identity, type, and the value for 4
+print(id(4),type(4),4)
+# type of any type is a type, the type itself is a type
+print(type(type(4)))
+print(type(type(type(4))))
+\end{lstlisting}
+\begin{pyout}
+140711773227544 <class 'int'> 4
+<class 'type'>
+<class 'type'>
+\end{pyout}
+\begin{itemize}
+\item {\bf Identity}: it guarantees that {different objects} have {distinct identities} at {any given time}. 
+\item {\bf Type}: objects of the same type support the same {operations}, and share the same {properties}.
+\end{itemize}
+
+
+\subsection{Binding and Input}
+\qquad In Python, the {\bf assignment} of $a=b$ is like making the name {\itshape a} pointing to the object {\itshape b}.
+\begin{lstlisting}[language=Python]
+# an example for binding
+a,b=4,print
+print(type(a),a,type(b),b,
+      id(a),id(4),id(b),id(print))
+b(a+5,"hello")
+\end{lstlisting}
+\begin{pyout}
+<class 'int'> 4 <class 'builtin_function_or_method'> <built-in function print> 140723891816984 140723891816984 2069908885472 2069908885472
+9 hello
+\end{pyout}
+\qquad The basic input in Python is through the function input( ). The input takes ONE string as prompt, and it reads input as a string.
+\begin{lstlisting}[language=Python]
+# an example for input function
+n=input(f"{a} and hello\n")
+print(type(n),n)
+\end{lstlisting}
+\begin{pyout}
+4 and hello
+5
+<class 'str'> 5
+\end{pyout}
+
+
+
+\subsection{Numeric}
+\qquad The following are numeric types:
+\[\text{bool}\subset\text{int}\subset_?\text{float}\subset_?\text{complex}\footnote{In fact, int is not a subset of float nor complex, neither do float is a subset of complex.}\]
+\begin{lstlisting}[language=Python]
+# an example for the above data types
+print(type(True),True,type(1),1,
+      type(1.0),1.0,type(1+0j),1+0j)
+\end{lstlisting}
+\begin{pyout}
+<class 'bool'> True <class 'int'> 1 <class 'float'> 1.0 <class 'complex'> (1+0j)
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# subset example
+if True==1==1.0==1+0j:
+    print("Yes")
+else:
+    print("No")
+\end{lstlisting}
+\begin{pyout}
+Yes
+\end{pyout}
+\qquad We can use bool( ), int( ), float( ), and complex( ) to convert a string to the corresponding data type from input( ); 
+\begin{lstlisting}[language=Python]
+# input string to number
+n=input("type in an integer\n")
+print(type(n),n,type(int(n)),int(n))
+\end{lstlisting}
+\begin{pyout}
+type in an integer
+17
+<class 'str'> 17 <class 'int'> 17
+\end{pyout}
+identically map from a subset to a larger set, or canonically map from the supset to the restricted set:
+\begin{lstlisting}[language=Python]
+# identical map and canonical map
+print(int(False),float(5),int(3.7))
+\end{lstlisting}
+\begin{pyout}
+0 5.0 3
+\end{pyout}
+\subsection*{More on Bool}
+\begin{lstlisting}[language=Python]
+# logic and bool
+print(type(1==0))
+print(type(""),bool(""))
+if not "":
+    print("statement or bool value defined can be used in logic")
+\end{lstlisting}
+\begin{pyout}
+<class 'bool'>
+<class 'str'> False
+statement or bool value defined can be used in logic
+\end{pyout}
+\qquad For statements and numbers, there is a {\bf special method} bool:
+\begin{lstlisting}[language=Python]
+# special method __bool__()
+print(type((5==3).__bool__()),(5==3).__bool__(),
+      id((5==3).__bool__()),id(False))
+\end{lstlisting}
+\begin{pyout}
+<class 'bool'> False 140723890821168 140723890821168
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# special method __bool__() for numbers
+print(type((0+3.5j).__bool__()),(0+3.5j).__bool__(),
+      id((0+3.5j).__bool__()),id(True))
+\end{lstlisting}
+\begin{pyout}
+<class 'bool'> True 140723890821136 140723890821136
+\end{pyout}
+For some data like string, list etc., the special method len is defined.
+\begin{lstlisting}[language=Python]
+# sepcial method __len__() for strings
+print(type("abcd".__len__()),"abcd".__len__(),
+      id("abcd".__len__()),id(4))
+\end{lstlisting}
+\begin{pyout}
+<class 'int'> 4 140723891816984 140723891816984
+\end{pyout}
+\qquad The bool( ) has a {\bf protocol}:
+\begin{enumerate}
+\item If special method bool is defined, then return.
+\item Else if the special method is defined, then return True if len is not 0 and vise versa.
+\item Else return True.
+\end{enumerate}
+In general, bool( ) is used for logical determination.
+
+
+\subsection*{More on Float}
+\qquad For float, there are some useful {\bf regular methods}:
+\begin{lstlisting}[language=Python]
+# regular method is_integer() for floats
+print(type((1.3).is_integer()),(1.3).is_integer())
+\end{lstlisting}
+\begin{pyout}
+<class 'bool'> False
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# regular method as_integer_ratio() for floats
+print(type((0.5).as_integer_ratio()),
+      (0.5).as_integer_ratio())
+\end{lstlisting}
+\begin{pyout}
+<class 'tuple'> (1, 2)
+\end{pyout}
+\qquad In fact, for binary, $0.1$ has infinitly many number after the decimal point:
+\begin{lstlisting}[language=Python]
+# decimal in binary
+x=0.1
+print(x,f"{x:.17f}")
+\end{lstlisting}
+\begin{pyout}
+0.1 0.10000000000000001
+\end{pyout}
+For actual finite decimal, it is better to use a {\bf standard library} decimal, and a function in the libary, Decimal:
+\begin{lstlisting}[language=Python]
+# standard library decimal
+import decimal
+print(type(decimal.Decimal("0.1")),"\n",
+      f"{decimal.Decimal("0.1"):.50f}\n",
+      f"{decimal.Decimal(0.1):.50f}")
+\end{lstlisting}
+\begin{pyout}
+<class 'decimal.Decimal'>
+ 0.10000000000000000000000000000000000000000000000000
+ 0.10000000000000000555111512312578270211815834045410
+\end{pyout}
+A better way is to use a standard library fractions, and a fucntion in the libary, Fraction; and we can check if $0.1$ is indeed the $0.1$:
+\begin{lstlisting}[language=Python]
+# standard library fractions
+import fractions
+print(type(fractions.Fraction(1,10)),"\n",
+      fractions.Fraction(1,10),fractions.Fraction("0.1"),
+      fractions.Fraction(1,10)==decimal.Decimal("0.1"))
+\end{lstlisting}
+\begin{pyout}
+<class 'fractions.Fraction'>
+ 1/10 1/10 True
+\end{pyout}
+
+
+
+
+\subsection{String}
+\qquad Some regular methods: from string to string
+\begin{lstlisting}[language=Python]
+# regular method strip() for string
+n="     abc  123     "
+print(n,"\n",n.strip())
+\end{lstlisting}
+\begin{pyout}
+     abc  123
+ abc  123
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# regular method lower(), upper() for string
+n="AbCdEf"
+print(n.lower(),n.upper())
+\end{lstlisting}
+\begin{pyout}
+abcdef ABCDEF
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# regular method replace() for string
+n="banana"
+print(n.replace("a","A",2),n.replace("a","A"))
+\end{lstlisting}
+\begin{pyout}
+bAnAna bAnAnA
+\end{pyout}
+Regular method split: string to list with string elements, and join: {\bf list with string elements} to string.
+\begin{lstlisting}[language=Python]
+# regular method split(), join() for string
+n="123.456.789"
+print(type(n.split(".")),n.split("."),
+      type(",".join(n.split("."))),",".join(n.split(".")))
+\end{lstlisting}
+\begin{pyout}
+<class 'list'> ['123', '456', '789'] <class 'str'> 123,456,789
+\end{pyout}
+\qquad String is {\bf immutable}: if we change the string, the identity is changed
+\begin{lstlisting}[language=Python]
+# string is immutable
+n="123"
+m=n.strip("3")
+print(n is m,n,m)
+\end{lstlisting}
+\begin{pyout}
+False 123 12
+\end{pyout}
+
+
+
+\subsection*{F-String}
+\qquad {\bf Formatted string literal}, or f-string, is for better output.
+\begin{lstlisting}[language=Python]
+# f-string examples
+x=3.14159265358
+print(f"Pi is approximately {x}\n",
+      f"Pi is approximately {x:.4f}")
+\end{lstlisting}
+\begin{pyout}
+Pi is approximately 3.14159265358
+ Pi is approximately 3.1416
+\end{pyout}
+In python, every float has at least $6$ digits precision.
+\begin{lstlisting}[language=Python]
+# precision
+x=3.14159265358
+print(f"{x:f}\n",
+      f"{x:10f}")
+\end{lstlisting}
+\begin{pyout}
+3.141593
+   3.141593
+\end{pyout}
+We can make the number show in different position, and fill the space with letter or number. 
+\begin{lstlisting}[language=Python]
+# integer
+print(f"{int(x):5d}\n",
+      f"{int(x):<5d}\n",
+      f"{int(x):^5d}\n",
+      f"{int(x):>5d}\n",
+      f"{int(x):0<5d}\n",
+      f"{int(x):e^5d}\n",
+      f"{int(x):x>5d}")
+\end{lstlisting}
+\begin{pyout}
+    3
+ 3
+   3
+     3
+ 30000
+ ee3ee
+ xxxx3
+\end{pyout}
+
+
+
+
+
+\subsection{List and Tuple}
+\begin{lstlisting}[language=Python]
+# list
+a,b,c,d=[],[1],[1,],[1,2,3]
+print(type(a),type(b),type(c),type(d),
+      a,b,c,d)
+\end{lstlisting}
+\begin{pyout}
+<class 'list'> <class 'list'> <class 'list'> <class 'list'> [] [1] [1] [1, 2, 3]
+\end{pyout}
+\begin{lstlisting}[language=Python]
+# tuple
+a,b,c,d=(),(1),(1,),(1,2,3)
+print(type(a),type(b),type(c),type(d),
+      a,b,c,d)
+\end{lstlisting}
+\begin{pyout}
+<class 'tuple'> <class 'int'> <class 'tuple'> <class 'tuple'> () 1 (1,) (1, 2, 3)
+\end{pyout}
+\qquad Contrast to string, list is {\bf mutable}: we can change the list without changing the identity, and the method return None.
+\begin{lstlisting}[language=Python]
+# regular method append() for list
+a=[1,2]
+b=a
+c=a.append(3)
+print(type(c),c,b,b is a)
+\end{lstlisting}
+\begin{pyout}
+<class 'NoneType'> None [1, 2, 3] True
+\end{pyout}
+The input for extend must be {\bf iterable}.
+\begin{lstlisting}[language=Python]
+# regular method extend() for list
+a=[1,2]
+b=[1,2]
+print(a.extend([3,4]),b.append([3,4]),a,b)
+\end{lstlisting}
+\begin{pyout}
+None None [1, 2, 3, 4] [1, 2, [3, 4]]
+\end{pyout}
+The following require {\bf indexing}.
+\begin{lstlisting}[language=Python]
+# regular method insert(), pop(), index(), clear() for list
+a=[1,3,4,5,5,6,7]
+print(a.insert(1,2),a)
+print(a.pop(),a,a.pop(0),a)
+print(a.index(6))
+try:
+      print(a.index(7))
+except ValueError:
+      print("Value Error, cannot find the number 7 in a")
+print(a.clear(),a)
+\end{lstlisting}
+\begin{pyout}
+None [1, 2, 3, 4, 5, 5, 6, 7]
+7 [2, 3, 4, 5, 5, 6] 1 [2, 3, 4, 5, 5, 6]
+5
+Value Error, cannot find the number 7 in a
+None []
+\end{pyout}
+We can search a specific element and remove the element:
+\begin{lstlisting}[language=Python]
+# regular method count(), remove() for list
+a=[1,2,3,4,5,5,5,5,5,5,5,6]
+print(type(a.count(5)),a.count(5),a.remove(5),a,a.count(5))
+for i in a:
+      if a.count(i)>1:
+            for _ in range(a.count(i)-1):
+                  a.remove(i)
+print(a)
+\end{lstlisting}
+\begin{pyout}
+<class 'int'> 7 None [1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 6] 6
+[1, 2, 3, 4, 5, 6]
+\end{pyout}
+\qquad The difference between {\bf shallow copy} and {\bf deep copy}:
+\begin{lstlisting}[language=Python]
+# regular method copy(), reverse() for list
+a=[1,2,3,4]
+b=a.copy()
+print(a is b,a.reverse(),a,b)
+
+# copy()'s elements still shared
+a=[[1,2],[3,4]]
+b=a.copy()
+a.reverse()
+print(a,b)
+b[0][0]=999
+print(a,b)
+
+# deep copy
+import copy
+a=[[1,2],[3,4]]
+b=copy.deepcopy(a)
+a.reverse()
+print(a,b)
+b[0][0]=999
+print(a,b)
+\end{lstlisting}
+\begin{pyout}
+[[3, 4], [1, 2]] [[1, 2], [3, 4]]
+[[3, 4], [999, 2]] [[999, 2], [3, 4]]
+[[3, 4], [1, 2]] [[1, 2], [3, 4]]
+[[3, 4], [1, 2]] [[999, 2], [3, 4]]
+\end{pyout}
+\qquad While tuple is immutable, but the regular methods count, index are similar. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
